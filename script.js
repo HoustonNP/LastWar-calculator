@@ -1,46 +1,77 @@
-const initialTimeForm = document.getElementById("initial-time-form");
-const initialDay = document.getElementById("initial-day");
-const initialHour = document.getElementById("initial-hour");
-const initialMin = document.getElementById("initial-min");
-const initialSec = document.getElementById("initial-sec");
+// Inputs
+const initialDaysInput = document.getElementById("initial-days-input");
+const initialHoursInput = document.getElementById("initial-hours-input");
+const initialMinutesInput = document.getElementById("initial-minutes-input");
+const initialSecondsInput = document.getElementById("initial-seconds-input");
 
-const realTimeForm = document.getElementById("real-time-form");
-const realDay = document.getElementById("real-day");
-const realHour = document.getElementById("real-hour");
-const realMin = document.getElementById("real-min");
-const realSec = document.getElementById("real-sec");
+const realDaysInput = document.getElementById("real-days-input");
+const realHoursInput = document.getElementById("real-hours-input");
+const realMinutesInput = document.getElementById("real-minutes-input");
+const realSecondsInput = document.getElementById("real-seconds-input");
 
-const bonusForm = document.getElementById("bonus-form");
-const bonus = document.getElementById("bonus");
+const bonusInput = document.getElementById("bonus-input");
 
-const startBtn = document.getElementById("start");
-
+// UI
+const calculateBtn = document.getElementById("calculate-btn");
 const resultTime = document.getElementById("result-time");
+const toggleBtn = document.getElementById("theme-toggle");
+const themeIcon = document.getElementById("theme-icon");
 
-function myFunction() {
-  let initialTime =
-    +initialSec.value +
-    +initialMin.value * 60 +
-    +initialHour.value * 60 * 60 +
-    +initialDay.value * 60 * 60 * 24;
+function calculateTime() {
+  const initialTimeSeconds =
+    +initialSecondsInput.value +
+    +initialMinutesInput.value * 60 +
+    +initialHoursInput.value * 3600 +
+    +initialDaysInput.value * 86400;
 
-  let realTime =
-    +realSec.value +
-    +realMin.value * 60 +
-    +realHour.value * 60 * 60 +
-    +realDay.value * 60 * 60 * 24;
+  const realTimeSeconds =
+    +realSecondsInput.value +
+    +realMinutesInput.value * 60 +
+    +realHoursInput.value * 3600 +
+    +realDaysInput.value * 86400;
 
-  let currentProcentage = +initialTime / (+realTime / 100);
+  const currentPercentage = initialTimeSeconds / (realTimeSeconds / 100);
+  const resultPercentage = currentPercentage + +bonusInput.value;
+  const calculatedTimeSeconds = (initialTimeSeconds / resultPercentage) * 100;
 
-  let resultProcentage = +currentProcentage + +bonus.value;
-
-  let time = (+initialTime / +resultProcentage) * 100;
-
-  const day = Math.floor(time / 86400);
-  const hour = Math.floor((time % 86400) / 3600);
-  const min = Math.floor((time % 3600) / 60);
-  const sec = Math.round(time % 60);
+  const days = Math.floor(calculatedTimeSeconds / 86400);
+  const hours = Math.floor((calculatedTimeSeconds % 86400) / 3600);
+  const minutes = Math.floor((calculatedTimeSeconds % 3600) / 60);
+  const seconds = Math.round(calculatedTimeSeconds % 60);
 
   resultTime.textContent =
-    day + " day, " + hour + " h, " + min + " min, " + sec + " sec.";
+    `${days} d, ` +
+    `${String(hours).padStart(2, "0")}:` +
+    `${String(minutes).padStart(2, "0")}:` +
+    `${String(seconds).padStart(2, "0")}`;
 }
+
+calculateBtn.addEventListener("click", calculateTime);
+
+// === Тема ===
+function setThemeIcon(isLight) {
+  themeIcon.src = isLight ? "icons/sun.svg" : "icons/moon.svg";
+  themeIcon.alt = isLight ? "Sun icon" : "Moon icon";
+}
+
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme) {
+  const isLight = savedTheme === "light";
+  document.body.classList.toggle("light-theme", isLight);
+  setThemeIcon(isLight);
+} else {
+  const prefersLight = window.matchMedia(
+    "(prefers-color-scheme: light)"
+  ).matches;
+  if (prefersLight) {
+    document.body.classList.add("light-theme");
+  }
+  setThemeIcon(prefersLight);
+}
+
+toggleBtn.addEventListener("click", () => {
+  document.body.classList.toggle("light-theme");
+  const isLight = document.body.classList.contains("light-theme");
+  setThemeIcon(isLight);
+  localStorage.setItem("theme", isLight ? "light" : "dark");
+});
