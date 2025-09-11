@@ -18,32 +18,52 @@ const toggleBtn = document.getElementById("theme-toggle");
 const themeIcon = document.getElementById("theme-icon");
 
 function calculateTime() {
+  const toNumber = (input) => Number(input.value) || 0;
+
   const initialTimeSeconds =
-    +initialSecondsInput.value +
-    +initialMinutesInput.value * 60 +
-    +initialHoursInput.value * 3600 +
-    +initialDaysInput.value * 86400;
+    toNumber(initialSecondsInput) +
+    toNumber(initialMinutesInput) * 60 +
+    toNumber(initialHoursInput) * 3600 +
+    toNumber(initialDaysInput) * 86400;
 
   const realTimeSeconds =
-    +realSecondsInput.value +
-    +realMinutesInput.value * 60 +
-    +realHoursInput.value * 3600 +
-    +realDaysInput.value * 86400;
+    toNumber(realSecondsInput) +
+    toNumber(realMinutesInput) * 60 +
+    toNumber(realHoursInput) * 3600 +
+    toNumber(realDaysInput) * 86400;
+
+  if (realTimeSeconds === 0) {
+    resultTime.textContent = "Ups... nothing buid!";
+    return;
+  }
+
+  const bonusValue = Number(bonusInput.value) || 0;
 
   const currentPercentage = initialTimeSeconds / (realTimeSeconds / 100);
-  const resultPercentage = currentPercentage + +bonusInput.value;
+  const resultPercentage = currentPercentage + bonusValue;
+
+  if (!Number.isFinite(resultPercentage) || resultPercentage === 0) {
+    resultTime.textContent = "Ups... Jacque Fresco quotes!";
+    return;
+  }
+
   const calculatedTimeSeconds = (initialTimeSeconds / resultPercentage) * 100;
+
+  if (!Number.isFinite(calculatedTimeSeconds)) {
+    resultTime.textContent = "Ups... Jacque Fresco quotes!";
+    return;
+  }
 
   const days = Math.floor(calculatedTimeSeconds / 86400);
   const hours = Math.floor((calculatedTimeSeconds % 86400) / 3600);
   const minutes = Math.floor((calculatedTimeSeconds % 3600) / 60);
   const seconds = Math.round(calculatedTimeSeconds % 60);
 
-  resultTime.textContent =
-    `${days} d, ` +
-    `${String(hours).padStart(2, "0")}:` +
-    `${String(minutes).padStart(2, "0")}:` +
-    `${String(seconds).padStart(2, "0")}`;
+  const pad = (n) => String(n).padStart(2, "0");
+
+  resultTime.textContent = `${days} d, ${pad(hours)}:${pad(minutes)}:${pad(
+    seconds
+  )}`;
 }
 
 calculateBtn.addEventListener("click", calculateTime);
