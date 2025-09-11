@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header>
+        <h1>Building Time Calculator</h1>
+    </header>
+    <main>
+        <div class="wrapper">
+            <h2>Initial Build Time:</h2>
+            <form id="initial-time-form">
+                <input type="number" id="initial-day" placeholder="day">
+                <input type="number" id="initial-hour" placeholder="hour">
+                <input type="number" id="initial-min" placeholder="min">
+                <input type="number" id="initial-sec" placeholder="sec">
+            </form>
+        </div>
+        
+        <div class="wrapper">
+            <h2>Real Build Time:</h2>
+            <form id="real-time-form">
+                <input type="number" id="real-day" placeholder="day">
+                <input type="number" id="real-hour" placeholder="hour">
+                <input type="number" id="real-min" placeholder="min">
+                <input type="number" id="real-sec" placeholder="sec">
+            </form>
+        </div>
+        
+        <div class="wrapper">
+            <h2>Future Bonus:</h2>
+            <form id="bonus-form">
+                <input type="number" id="bonus" placeholder="5%">
+            </form>
+        </div>
+
+        <button onclick="myFunction()" id="start">Calculate</button>
+
+        <div class="wrapper">
+            <h2>Result Build Time: <span id="result-time">0</span></h2>
+        </div>
+    </main>
+    <footer>2025</footer>
+    <script src="./script.js"></script>
+</body>
+</html>
