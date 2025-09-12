@@ -18,7 +18,7 @@ select.addEventListener("change", () => {
 });
 
 window.addEventListener("DOMContentLoaded", () => {
-  const saved = localStorage.getItem("selectedCalculator") || "build"; // по умолчанию build
+  const saved = localStorage.getItem("selectedCalculator") || "build-option";
   select.value = saved;
   renderCalculator(saved);
 });
