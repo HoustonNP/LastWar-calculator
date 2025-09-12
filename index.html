@@ -5,63 +5,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title>Time Calculator</title>
+    <title>LastWar Calculator</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
-    <meta name="theme-color" content="#111">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000">
 </head>
 
 <body class="time-calculator">
     <header>
-        <h1>Time Calculator</h1>
-        <button id="theme-toggle">
+        <select name="calculator" id="select">
+            <option value="build-option">Build Calculator</option>
+            <option value="survivors-option">Survivors Calculator</option>
+        </select>
+
+        <button id="theme-toggle" class="themeToggle">
             <img id="theme-icon" src="./icons/moon.svg" alt="moon">
         </button>
     </header>
 
     <main>
-        <section>
-            <h2>Initial Time:</h2>
-            <form id="initial-time-form">
+        <div id="build-calc">
+            <section>
+                <h2>Initial Time:</h2>
                 <input id="initial-days-input" type="number" placeholder="Days">
                 <input id="initial-hours-input" type="number" placeholder="Hours">
                 <input id="initial-minutes-input" type="number" placeholder="Minutes">
                 <input id="initial-seconds-input" type="number" placeholder="Seconds">
-            </form>
-        </section>
+            </section>
 
-        <section>
-            <h2>Real Time:</h2>
-            <form id="real-time-form">
+            <section>
+                <h2>Real Time:</h2>
                 <input id="real-days-input" type="number" placeholder="Days">
                 <input id="real-hours-input" type="number" placeholder="Hours">
                 <input id="real-minutes-input" type="number" placeholder="Minutes">
                 <input id="real-seconds-input" type="number" placeholder="Seconds">
-            </form>
-        </section>
+            </section>
 
-        <section>
-            <h2>Future Bonus (%):</h2>
-            <form id="bonus-form">
+            <section>
+                <h2>Future Bonus (%):</h2>
                 <input id="bonus-input" type="number" placeholder="Bonus %">
-            </form>
-        </section>
+            </section>
 
-        <button id="calculate-btn">Calculate</button>
-        <h2 id="result-time"></h2>
+            <button id="build-btn" class="actionBtn">Calculate</button>
+            <h2 id="result-time"></h2>
+        </div>
+
+        <div id="survivors-calc" style="display: none;">
+            <section>
+                <h2>Initial Time Build:</h2>
+                <input id="initial-days-build" type="number" placeholder="Days">
+                <input id="initial-hours-build" type="number" placeholder="Hours">
+                <input id="initial-minutes-build" type="number" placeholder="Minutes">
+                <input id="initial-seconds-build" type="number" placeholder="Seconds">
+            </section>
+        
+            <section>
+                <h2>"Big Help" Alliance Technology Level:</h2>
+                <input id="big-help" type="number" placeholder="10" value="10">
+            </section>
+        
+            <section>
+                <h2>Count Of Help:</h2>
+                <input id="count-of-help" type="number" placeholder="32">
+            </section>
+        
+            <section>
+                <h2>Time For One Help:</h2>
+                <input id="help-hours" type="number" placeholder="Hours">
+                <input id="help-minutes" type="number" placeholder="Minutes">
+                <input id="help-seconds" type="number" placeholder="Seconds">
+            </section>
+        
+            <button id="survivors-btn" class="actionBtn">Calculate</button>
+        
+            <h2 id="reduced-time"></h2>
+            <h2 id="remaining-time"></h2>
+        </div>
     </main>
 
     <footer>
-        <p>© 2025 Time Calculator</p>
+        <p>© 2025 LastWar Calculator</p>
     </footer>
 
-    <script src="script.js"></script>
-    <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("/service-worker.js");
-        }
-    </script>
+    <script src="./scripts/theme.js"></script>
+    <script src="./scripts/select.js"></script>
+    <script src="./scripts/build.js"></script>
+    <script src="./scripts/survivors.js"></script>
+<script>
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/service-worker.js")
+            .then(() => console.log("Service Worker registered"))
+            .catch((err) => console.log("SW registration failed:", err));
+    }
+</script>
 </body>
 
 </html>
