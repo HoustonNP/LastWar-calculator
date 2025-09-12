@@ -32,11 +32,16 @@ function calculateTime() {
     toNumber(realHoursInput) * 3600 +
     toNumber(realDaysInput) * 86400;
 
-  if (realTimeSeconds === 0) {
+  if (initialTimeSeconds === 0 || realTimeSeconds === 0) {
     resultTime.textContent = "Ups... nothing build!";
     return;
   }
 
+  if (realTimeSeconds > initialTimeSeconds) {
+    resultTime.textContent = "Ups... you have a debuff!";
+    return;
+  }
+  
   const bonusValue = Number(bonusInput.value) || 0;
 
   const currentPercentage = initialTimeSeconds / (realTimeSeconds / 100);
@@ -95,4 +100,5 @@ toggleBtn.addEventListener("click", () => {
   setThemeIcon(isLight);
   localStorage.setItem("theme", isLight ? "light" : "dark");
 });
+
 
