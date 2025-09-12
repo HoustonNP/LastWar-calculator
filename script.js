@@ -33,7 +33,7 @@ function calculateTime() {
     toNumber(realDaysInput) * 86400;
 
   if (realTimeSeconds === 0) {
-    resultTime.textContent = "Ups... nothing buid!";
+    resultTime.textContent = "Ups... nothing build!";
     return;
   }
 
@@ -95,3 +95,4 @@ toggleBtn.addEventListener("click", () => {
   setThemeIcon(isLight);
   localStorage.setItem("theme", isLight ? "light" : "dark");
 });
+
