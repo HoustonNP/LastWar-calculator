@@ -56,7 +56,7 @@ function calculateTime() {
   }
 
   // бонус от альянса
-  const helpBonus = toNumber(allianceBonusLevel) * 30;
+  const helpBonus = toNumber(allianceBonusLevel) * 30 + 60;
 
   if (helpBonus <= 0) {
     maxBuidTimeText.textContent = "You need change alliance!";
@@ -78,6 +78,16 @@ function calculateTime() {
     return;
   }
 
+  if (totalInitialTime === 0) {
+    const Tmax = calculateMaxBuildTime(helpTime, totalHelps);
+    if (Tmax > 0) {
+      maxBuidTimeText.textContent = `Max build time: ${formatTime(Tmax)}`;
+    }
+    reducedTimeText.style.display = "none";
+    remainingTimeText.style.display = "none";
+    return;
+  }
+
   if (totalInitialTime >= 0) {
     const Tmax = calculateMaxBuildTime(helpTime, totalHelps);
     if (Tmax > 0) {
@@ -93,28 +103,7 @@ function calculateTime() {
 }
 
 function calculateMaxBuildTime(helpTime, totalHelps) {
-  if (helpTime < 60) {
-    return 0;
-  }
-
-  if (totalHelps === 1) {
-    return Math.max(0, Math.ceil(helpTime * 200) - 1);
-  }
-
-  const ratio = 199 / 200;
-  const n = totalHelps;
-
-  const L = (helpTime * 200) / Math.pow(ratio, n - 2);
-  const U = (helpTime * 200) / Math.pow(ratio, n - 1);
-
-  const minAllowed = Math.ceil(L);
-  const maxAllowed = Math.ceil(U) - 1;
-
-  if (maxAllowed < minAllowed) {
-    return 0;
-  }
-
-  return maxAllowed;
+  return (200 * helpTime) / Math.pow(0.995, totalHelps - 1);
 }
 
 function calculateHelpTime(totalInitialTime, totalHelps, helpTime) {
