@@ -11,12 +11,23 @@ const helpMinutes = document.getElementById("help-minutes");
 const helpSeconds = document.getElementById("help-seconds");
 
 const survivorsBtn = document.getElementById("survivors-btn");
+const maxBuidTimeText = document.getElementById("max-buid-time");
 const reducedTimeText = document.getElementById("reduced-time");
 const remainingTimeText = document.getElementById("remaining-time");
 
-function calculateTime() {
-  const toNumber = (input) => Number(input.value) || 0;
+const toNumber = (input) => Number(input.value) || 0;
 
+// форматирование времени в д, чч:мм:сс
+const formatTime = (seconds) => {
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.round(seconds % 60);
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${days} d, ${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+};
+
+function calculateTime() {
   // общее изначальное время постройки
   const totalInitialTime =
     toNumber(initialSeconds) +
@@ -24,14 +35,35 @@ function calculateTime() {
     toNumber(initialHours) * 3600 +
     toNumber(initialDays) * 86400;
 
+  if (totalInitialTime < 0) {
+    maxBuidTimeText.textContent = "Ups... Jacque Fresco quotes!";
+    reducedTimeText.style.display = "none";
+    remainingTimeText.style.display = "none";
+    return;
+  }
+
   // длительность одной помощи без бонуса
   const helpDuration =
     toNumber(helpSeconds) +
     toNumber(helpMinutes) * 60 +
     toNumber(helpHours) * 3600;
 
+  if (helpDuration <= 0) {
+    maxBuidTimeText.textContent = "Ups... Jacque Fresco quotes!";
+    reducedTimeText.style.display = "none";
+    remainingTimeText.style.display = "none";
+    return;
+  }
+
   // бонус от альянса
   const helpBonus = toNumber(allianceBonusLevel) * 30;
+
+  if (helpBonus <= 0) {
+    maxBuidTimeText.textContent = "You need change alliance!";
+    reducedTimeText.style.display = "none";
+    remainingTimeText.style.display = "none";
+    return;
+  }
 
   // итоговая длительность одной помощи
   const helpTime = helpDuration + helpBonus;
@@ -39,25 +71,53 @@ function calculateTime() {
   // количество помощи
   const totalHelps = toNumber(totalHelpsInput);
 
-  if (totalInitialTime === 0) {
-    reducedTimeText.textContent = "Ups... nothing build!";
-    remainingTimeText.textContent = "";
-    return;
-  }
-
   if (totalHelps <= 0) {
-    reducedTimeText.textContent = "Oh... no one help!";
-    remainingTimeText.textContent = "";
+    maxBuidTimeText.textContent = "Oh... no one help!";
+    reducedTimeText.style.display = "none";
+    remainingTimeText.style.display = "none";
     return;
   }
 
-  if (helpDuration > totalInitialTime) {
-    reducedTimeText.textContent = "Wow... need one help!";
-    remainingTimeText.textContent = "";
+  if (totalInitialTime >= 0) {
+    const Tmax = calculateMaxBuildTime(helpTime, totalHelps);
+    if (Tmax > 0) {
+      maxBuidTimeText.textContent = `Max build time: ${formatTime(Tmax)}`;
+    }
+    const time = calculateHelpTime(totalInitialTime, totalHelps, helpTime);
+    reducedTimeText.style.display = "flex";
+    remainingTimeText.style.display = "flex";
+    reducedTimeText.textContent = `Reduced: ${formatTime(time.totalReduced)}`;
+    remainingTimeText.textContent = `Remaining: ${formatTime(time.finalTime)}`;
     return;
   }
+}
 
-  // цикл применения помощи
+function calculateMaxBuildTime(helpTime, totalHelps) {
+  if (helpTime < 60) {
+    return 0;
+  }
+
+  if (totalHelps === 1) {
+    return Math.max(0, Math.ceil(helpTime * 200) - 1);
+  }
+
+  const ratio = 199 / 200;
+  const n = totalHelps;
+
+  const L = (helpTime * 200) / Math.pow(ratio, n - 2);
+  const U = (helpTime * 200) / Math.pow(ratio, n - 1);
+
+  const minAllowed = Math.ceil(L);
+  const maxAllowed = Math.ceil(U) - 1;
+
+  if (maxAllowed < minAllowed) {
+    return 0;
+  }
+
+  return maxAllowed;
+}
+
+function calculateHelpTime(totalInitialTime, totalHelps, helpTime) {
   let remainingTime = totalInitialTime;
 
   for (let i = 0; i < totalHelps; i++) {
@@ -68,7 +128,7 @@ function calculateTime() {
       step = 60;
     } else if (helpTime > remainingTime / 200) {
       step = helpTime;
-    } else {
+    } else if (helpTime <= remainingTime / 200) {
       step = remainingTime / 200;
     }
 
@@ -77,19 +137,7 @@ function calculateTime() {
 
   const totalReduced = totalInitialTime - Math.max(0, remainingTime);
   const finalTime = Math.max(0, remainingTime);
-
-  // форматирование времени в д, чч:мм:сс
-  const formatTime = (seconds) => {
-    const days = Math.floor(seconds / 86400);
-    const hours = Math.floor((seconds % 86400) / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.round(seconds % 60);
-    const pad = (n) => String(n).padStart(2, "0");
-    return `${days} d, ${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
-  };
-
-  reducedTimeText.textContent = `Reduced: ${formatTime(totalReduced)}`;
-  remainingTimeText.textContent = `Remaining: ${formatTime(finalTime)}`;
+  return { totalReduced, finalTime };
 }
 
 survivorsBtn.addEventListener("click", calculateTime);
