@@ -95,13 +95,13 @@
     <script src="./scripts/select.js"></script>
     <script src="./scripts/build.js"></script>
     <script src="./scripts/survivors.js"></script>
-<script>
-    if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/service-worker.js")
-            .then(() => console.log("Service Worker registered"))
-            .catch((err) => console.log("SW registration failed:", err));
-    }
-</script>
+    <script>
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/service-worker.js")
+                .then(() => console.log("Service Worker registered"))
+                .catch((err) => console.log("SW registration failed:", err));
+        }
+    </script>
 </body>
 
 </html>

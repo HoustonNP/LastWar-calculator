@@ -11,7 +11,9 @@ const realSecondsInput = document.getElementById("real-seconds-input");
 const bonusInput = document.getElementById("bonus-input");
 
 const calculateBtn = document.getElementById("build-btn");
-const resultTime = document.getElementById("result-time");
+const resultTimeText = document.getElementById("result-time");
+
+resultTimeText.style.display = "none";
 
 const toNumber = (input) => Number(input.value) || 0;
 
@@ -25,6 +27,7 @@ const formatTime = (seconds) => {
 };
 
 function calculateTime() {
+  resultTimeText.style.display = "flex";
   const initialTimeSeconds =
     toNumber(initialSecondsInput) +
     toNumber(initialMinutesInput) * 60 +
@@ -38,12 +41,12 @@ function calculateTime() {
     toNumber(realDaysInput) * 86400;
 
   if (initialTimeSeconds === 0 || realTimeSeconds === 0) {
-    resultTime.textContent = "Ups... nothing build!";
+    resultTimeText.textContent = "Ups... nothing build!";
     return;
   }
 
   if (realTimeSeconds > initialTimeSeconds) {
-    resultTime.textContent = "Ups... you have a debuff!";
+    resultTimeText.textContent = "Ups... you have a debuff!";
     return;
   }
 
@@ -53,18 +56,18 @@ function calculateTime() {
   const resultPercentage = currentPercentage + bonusValue;
 
   if (!Number.isFinite(resultPercentage) || resultPercentage === 0) {
-    resultTime.textContent = "Ups... Jacque Fresco quotes!";
+    resultTimeText.textContent = "Ups... Jacque Fresco quotes!";
     return;
   }
 
   const calculatedTimeSeconds = (initialTimeSeconds / resultPercentage) * 100;
 
   if (!Number.isFinite(calculatedTimeSeconds)) {
-    resultTime.textContent = "Ups... Jacque Fresco quotes!";
+    resultTimeText.textContent = "Ups... Jacque Fresco quotes!";
     return;
   }
 
-  resultTime.textContent = formatTime(calculatedTimeSeconds);
+  resultTimeText.textContent = formatTime(calculatedTimeSeconds);
 }
 
 calculateBtn.addEventListener("click", calculateTime);

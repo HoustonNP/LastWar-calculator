@@ -17,7 +17,18 @@ const allianceHelpsText = document.getElementById("alliance-helps");
 const survivorsHelpsText = document.getElementById("survivors-helps");
 const remainingTimeText = document.getElementById("remaining-time");
 
+reducedTimeText.style.display = "none";
+remainingTimeText.style.display = "none";
+allianceHelpsText.style.display = "none";
+survivorsHelpsText.style.display = "none";
+
 function calculateTime() {
+  if (toNumber(allianceBonusLevel) <= 0) {
+    reducedTimeText.style.display = "flex";
+    reducedTimeText.textContent = "You need change alliance!";
+    return;
+  }
+
   const totalInitialTime =
     toNumber(initialSeconds) +
     toNumber(initialMinutes) * 60 +
@@ -25,9 +36,10 @@ function calculateTime() {
     toNumber(initialDays) * 86400;
 
   if (totalInitialTime <= 0) {
+    reducedTimeText.style.display = "flex";
     reducedTimeText.textContent = "Ups... Jacque Fresco quotes!";
     remainingTimeText.style.display = "none";
-    allianceHelpsTextHelpsText.style.display = "none";
+    allianceHelpsText.style.display = "none";
     survivorsHelpsText.style.display = "none";
     return;
   }
@@ -38,9 +50,10 @@ function calculateTime() {
     toNumber(helpHours) * 3600;
 
   if (helpDuration <= 0) {
+    reducedTimeText.style.display = "flex";
     reducedTimeText.textContent = "Ups... Jacque Fresco quotes!";
     remainingTimeText.style.display = "none";
-    allianceHelpsTextHelpsText.style.display = "none";
+    allianceHelpsText = style.display = "none";
     survivorsHelpsText.style.display = "none";
     return;
   }
@@ -48,9 +61,10 @@ function calculateTime() {
   const helpBonus = toNumber(allianceBonusLevel) * 30 + 60;
 
   if (helpBonus <= 0) {
+    reducedTimeText.style.display = "flex";
     reducedTimeText.textContent = "You need change alliance!";
     remainingTimeText.style.display = "none";
-    allianceHelpsTextHelpsText.style.display = "none";
+    allianceHelpsText.style.display = "none";
     survivorsHelpsText.style.display = "none";
     return;
   }
@@ -60,9 +74,10 @@ function calculateTime() {
   const totalHelps = toNumber(totalHelpsInput);
 
   if (totalHelps <= 0) {
+    reducedTimeText.style.display = "flex";
     reducedTimeText.textContent = "Oh... no one help!";
     remainingTimeText.style.display = "none";
-    allianceHelpsTextHelpsText.style.display = "none";
+    allianceHelpsText.style.display = "none";
     survivorsHelpsText.style.display = "none";
     return;
   }
