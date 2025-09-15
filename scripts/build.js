@@ -13,9 +13,18 @@ const bonusInput = document.getElementById("bonus-input");
 const calculateBtn = document.getElementById("build-btn");
 const resultTime = document.getElementById("result-time");
 
-function calculateTime() {
-  const toNumber = (input) => Number(input.value) || 0;
+const toNumber = (input) => Number(input.value) || 0;
 
+const formatTime = (seconds) => {
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.round(seconds % 60);
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${days} d, ${pad(hours)}:${pad(minutes)}:${pad(secs)}`;
+};
+
+function calculateTime() {
   const initialTimeSeconds =
     toNumber(initialSecondsInput) +
     toNumber(initialMinutesInput) * 60 +
@@ -55,16 +64,7 @@ function calculateTime() {
     return;
   }
 
-  const days = Math.floor(calculatedTimeSeconds / 86400);
-  const hours = Math.floor((calculatedTimeSeconds % 86400) / 3600);
-  const minutes = Math.floor((calculatedTimeSeconds % 3600) / 60);
-  const seconds = Math.round(calculatedTimeSeconds % 60);
-
-  const pad = (n) => String(n).padStart(2, "0");
-
-  resultTime.textContent = `${days} d, ${pad(hours)}:${pad(minutes)}:${pad(
-    seconds
-  )}`;
+  resultTime.textContent = formatTime(calculatedTimeSeconds);
 }
 
 calculateBtn.addEventListener("click", calculateTime);
